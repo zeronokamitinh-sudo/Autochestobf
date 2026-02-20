@@ -1241,82 +1241,56 @@ gui.IgnoreGuiInset = true
 gui.ResetOnSpawn = false
 gui.Parent = CoreGui
 
--- Khung chính
+-- Khung chính: Màu đen trong suốt, bo góc, viền vàng
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0.45, 0, 0.1, 0)
-frame.Position = UDim2.new(0.5, 0, 0.15, 0)
+frame.Size = UDim2.new(0, 280, 0, 75)
+frame.Position = UDim2.new(0.5, 0, 0.12, 0) -- Vị trí hạ thấp xuống một chút như bạn muốn
 frame.AnchorPoint = Vector2.new(0.5, 0.5)
-frame.BackgroundColor3 = Color3.fromRGB(15, 15, 20) -- Nền tối trung tính
-frame.BackgroundTransparency = 0.2
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Nền đen
+frame.BackgroundTransparency = 0.3 -- Trong suốt nhẹ
 frame.BorderSizePixel = 0
 frame.Parent = gui
-frame.Visible = false
 
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 15)
+corner.CornerRadius = UDim.new(0, 10) -- Bo góc nhẹ
 corner.Parent = frame
 
--- Viền xanh nhạt
 local stroke = Instance.new("UIStroke")
 stroke.Thickness = 2
-stroke.Color = Color3.fromRGB(0, 255, 255) -- Cyan
+stroke.Color = Color3.fromRGB(255, 255, 0) -- Viền vàng
 stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 stroke.Parent = frame
 
--- Gradient phối Vàng và Xanh nhạt cho nền
-local gradient = Instance.new("UIGradient")
-gradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 0)), -- Vàng
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 200, 255))  -- Xanh nhạt
-}
-gradient.Rotation = 45
-gradient.Transparency = NumberSequence.new(0.8) -- Làm mờ gradient nền để hiện chữ rõ hơn
-gradient.Parent = frame
+-- Chữ Zero Manager (To)
+local title = Instance.new("TextLabel")
+title.Name = "ZeroManagerTitle"
+title.Size = UDim2.new(1, 0, 0.6, 0)
+title.Position = UDim2.new(0, 0, 0.1, 0)
+title.BackgroundTransparency = 1
+title.Text = "Zero Manager"
+title.TextColor3 = Color3.fromRGB(255, 255, 0) -- Màu vàng
+title.Font = Enum.Font.GothamBlack
+title.TextSize = 22
+title.TextStrokeTransparency = 0.5
+title.Parent = frame
 
--- Chữ phối màu Vàng
-local text = Instance.new("TextLabel")
-text.Size = UDim2.new(1, 0, 1, 0)
-text.BackgroundTransparency = 1
-text.Text = "Zero Manager - Auto Collect Chest"
-text.TextColor3 = Color3.fromRGB(255, 255, 100) -- Vàng nhạt
-text.Font = Enum.Font.GothamBlack
-text.TextScaled = true
-text.TextStrokeTransparency = 0.3
-text.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-text.Parent = frame
-
--- Thêm Gradient trực tiếp cho chữ
-local textGradient = Instance.new("UIGradient")
-textGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 0)), -- Vàng
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 255))  -- Xanh nhạt
-}
-textGradient.Parent = text
-
--- Animation hiện ra
-frame.Visible = true
-frame.BackgroundTransparency = 1
-frame.Size = UDim2.new(0.2, 0, 0.05, 0)
-text.TextTransparency = 1
-stroke.Thickness = 0
-
-TweenService:Create(frame, TweenInfo.new(1, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-    BackgroundTransparency = 0.2,
-    Size = UDim2.new(0.45, 0, 0.1, 0)
-}):Play()
-
-TweenService:Create(text, TweenInfo.new(1, Enum.EasingStyle.Quad), {
-    TextTransparency = 0
-}):Play()
-
-TweenService:Create(stroke, TweenInfo.new(1, Enum.EasingStyle.Quad), {
-    Thickness = 2
-}):Play()
+-- Chữ Auto Collect Chest (Nhỏ hơn)
+local subtitle = Instance.new("TextLabel")
+subtitle.Name = "AutoCollectSubtitle"
+subtitle.Size = UDim2.new(1, 0, 0.3, 0)
+subtitle.Position = UDim2.new(0, 0, 0.65, 0)
+subtitle.BackgroundTransparency = 1
+subtitle.Text = "Auto Collect Chest"
+subtitle.TextColor3 = Color3.fromRGB(255, 255, 0) -- Màu vàng
+subtitle.Font = Enum.Font.GothamBold
+subtitle.TextSize = 14
+subtitle.TextStrokeTransparency = 0.5
+subtitle.Parent = frame
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
--- Hàm tạo aura (Đổi sang màu Vàng-Xanh)
+-- Hàm tạo aura
 local function applyAura(char)
     if not char then return end
     if char:FindFirstChild("ZeroAura") then char.ZeroAura:Destroy() end
@@ -1367,7 +1341,6 @@ local function createBillboardFor(character)
     textLabel.TextStrokeTransparency = 0.5
     textLabel.Parent = billboard
 
-    -- Hiệu ứng đổi màu giữa Vàng và Xanh nhạt
     task.spawn(function()
         local t = 0
         while textLabel.Parent do
@@ -1510,7 +1483,7 @@ task.delay(180, function()
     end
 end)
 
--- Mini UI (Đổi màu sang Vàng/Xanh)
+-- Mini UI
 if CoreGui:FindFirstChild("Zero_MiniUI") then CoreGui.Zero_MiniUI:Destroy() end
 local gui2 = Instance.new("ScreenGui")
 gui2.Name = "Zero_MiniUI"
@@ -1519,7 +1492,7 @@ gui2.Parent = CoreGui
 local function createToggle(name, posY, default, callback)
     local title = Instance.new("TextLabel")
     title.Size = UDim2.new(0, 120, 0, 15)
-    title.Position = UDim2.new(1, -140, 0.1, posY)
+    title.Position = UDim2.new(1, -140, 0.2, posY)
     title.BackgroundTransparency = 1
     title.Text = name
     title.TextColor3 = Color3.fromRGB(255, 255, 0) -- Vàng
@@ -1529,7 +1502,7 @@ local function createToggle(name, posY, default, callback)
 
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0, 20, 0, 20)
-    btn.Position = UDim2.new(1, -70, 0.1, posY + 20)
+    btn.Position = UDim2.new(1, -70, 0.2, posY + 20)
     btn.TextColor3 = Color3.fromRGB(0, 0, 0)
     btn.Font = Enum.Font.GothamBold
     btn.Parent = gui2
@@ -1549,10 +1522,9 @@ local function createToggle(name, posY, default, callback)
     end)
 end
 
+local AutoReset = true
 createToggle("Anti Kick", 0, true, function(s) AutoReset = s end)
-local Invisible = false
 createToggle("Invisible", 60, false, function(s) 
-    Invisible = s 
     if LocalPlayer.Character then
         for _, p in ipairs(LocalPlayer.Character:GetDescendants()) do
             if p:IsA("BasePart") or p:IsA("Decal") then p.LocalTransparencyModifier = s and 1 or 0 end
@@ -1569,7 +1541,6 @@ createToggle("Clear Map", 120, false, function(s)
 end)
 
 -- Anti Kick Loop
-local AutoReset = true
 task.spawn(function()
     while task.wait(13) do
         if AutoReset and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
